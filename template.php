@@ -14,6 +14,7 @@
         <td><a href="/">Accueil</a></td>
         <td><a href="/beer">Bières</a></td>
         <td><a href="/bar">Bars</a></td>
+        <td><a href="/about">À propos</a></td>
     </tr>
 </table>
 <?=$content?>
