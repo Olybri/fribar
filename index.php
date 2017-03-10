@@ -7,5 +7,4 @@ require "fribar/".(filter_input(INPUT_GET, "url") ?: "home").".php";
 $content = ob_get_contents();
 ob_end_clean();
 
-$title = "Fribar - ".$title;
 require "template.php";

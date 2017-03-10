@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <link rel="stylesheet" href="style.css">
-    <title><?=$title?></title>
+    <title>Fribar - <?= $title ?></title>
 </head>
 <body>
 <header>
@@ -12,11 +12,11 @@
 <table>
     <tr>
         <td><a href="/">Accueil</a></td>
-        <td><a href="/beer">Bières</a></td>
         <td><a href="/bar">Bars</a></td>
+        <td><a href="/beer">Bières</a></td>
         <td><a href="/about">À propos</a></td>
     </tr>
 </table>
-<?=$content?>
+<?= $content ?>
 </body>
 </html>
