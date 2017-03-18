@@ -17,7 +17,7 @@ if(isset($_POST["form"]))
         ."<form id='form' action='".$_SERVER["REQUEST_URI"]."' method='post'>"
         ."<fieldset>"
         ."<legend>Informations</legend>"
-        ."Nom : <input name='name' type='text' placeholder='Nom'><br>"
+        ."Nom : <input name='name' type='text' placeholder='Nom' required><br>"
         ."</fieldset>"
         ."<table><tr>";
     
@@ -30,14 +30,14 @@ if(isset($_POST["form"]))
         echo "<option value='".$beer["id"]."'>".$beer["name"]."</option>";
     
     echo "</select><br>"
-        ."Volume : <input name='volume[]' type='number' placeholder='Volume'> centilitres<br>"
-        ."Prix : <input name='price[]' type='number' step='0.05' placeholder='Prix'> CHF"
+        ."Volume : <input name='volume[]' type='number' placeholder='Volume' required> centilitres<br>"
+        ."Prix : <input name='price[]' type='number' step='0.05' placeholder='Prix' required> CHF"
         ."</fieldset>"
         ."<p><input type='button' onclick='addFields(\"beer\")' value='Ajouter une bière'></td></p>";
     
     echo "<td><h3>Heures d'ouvertures :</h3>"
         ."<fieldset id='schedule'>"
-        ."<legend>Horraire</legend>"
+        ."<legend>Horaire</legend>"
         ."Jour : <select name='day[]'>"
         ."<option value=1>Lundi</option>"
         ."<option value=2>Mardi</option>"
@@ -47,8 +47,8 @@ if(isset($_POST["form"]))
         ."<option value=6>Samedi</option>"
         ."<option value=7>Dimanche</option>"
         ."</select><br>"
-        ."Ouverture : <input name='open[]' type='time'><br>"
-        ."Fermeture : <input name='closed[]' type='time'>"
+        ."Ouverture : <input name='open[]' type='time' required><br>"
+        ."Fermeture : <input name='closed[]' type='time' required>"
         ."</fieldset>"
         ."<p><input type='button' onclick='addFields(\"schedule\")' value='Ajouter un jour'></td></p>";
     
