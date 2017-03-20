@@ -1,2 +1,4 @@
 .idea/
 design/
+vendor/
+phinx.yml
