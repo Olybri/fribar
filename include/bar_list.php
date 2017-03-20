@@ -14,11 +14,11 @@ if(!isset($_GET['id']))
         $url = $_SERVER["REQUEST_URI"]."?id=".$bar["id"];
         
         // Nombre de bières
-        $count = $db->query("SELECT COUNT(DISTINCT productID)FROM service WHERE barID = ".$bar["id"])->fetch()[0];
+        $count = $db->query("SELECT COUNT(DISTINCT product_id)FROM service WHERE bar_id = ".$bar["id"])->fetch()[0];
         
         // Meilleur prix (pour un litre)
         $best = 0;
-        foreach($db->query("SELECT * FROM service WHERE barID = ".$bar["id"]) as $barProduct)
+        foreach($db->query("SELECT * FROM service WHERE bar_id = ".$bar["id"]) as $barProduct)
         {
             $price = $barProduct["price"] / $barProduct["volume"] * 10;
             if($best == 0 || $price < $best)
@@ -37,7 +37,7 @@ if(!isset($_GET['id']))
 
 else
 {
-    $res = $db->query("SELECT * FROM service WHERE productID = ".$_GET["id"]);
+    $res = $db->query("SELECT * FROM service WHERE product_id = ".$_GET["id"]);
     if($res->rowCount() == 0)
         echo "Cette bière n'est actuellement servie dans aucun bar.";
     
@@ -49,7 +49,7 @@ else
         
         foreach($res as $row)
         {
-            $bar = $db->query("SELECT * FROM bar WHERE id = ".$row["barID"])->fetch();
+            $bar = $db->query("SELECT * FROM bar WHERE id = ".$row["bar_id"])->fetch();
             echo "<tr>";
             echo "<td><a href='bar?id=".$bar["id"]."'>".$bar["name"]."</td>";
             echo "<td>".($row["volume"] / 100)." dl</td>";

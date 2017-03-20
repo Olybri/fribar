@@ -22,9 +22,9 @@ else
         ."<th>Bière</th><th>Volume</th><th>Prix</th>"
         ."</tr>";
     
-    foreach($db->query("SELECT * FROM service WHERE barID = ".$_GET["id"]) as $row)
+    foreach($db->query("SELECT * FROM service WHERE bar_id = ".$_GET["id"]) as $row)
     {
-        $product = $db->query("SELECT * FROM product WHERE id = ".$row["productID"])->fetch();
+        $product = $db->query("SELECT * FROM product WHERE id = ".$row["product_id"])->fetch();
         echo "<tr>";
         echo "<td><a href='beer?id=".$product["id"]."'>".$product["name"]."</td>";
         echo "<td>".($row["volume"] / 100)." dl</td>";
