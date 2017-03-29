@@ -1,0 +1,65 @@
+<form id="form" action="/bar" method="post">
+    <fieldset>
+        <legend>Informations</legend>
+        <label>Nom</label>
+        <input name="name" type="text" placeholder="Nom" required>
+    </fieldset>
+    <table>
+        <tr>
+            <td>
+                <h3>Bières servies :</h3>
+                <fieldset id="beer">
+                    <legend>Bière</legend>
+                    <label>Nom</label>
+                    <select name="beer[]">
+                        {beer_list}
+                    </select>
+                    <br>
+                    <label>Volume</label>
+                    <input name="volume[]" type="number" placeholder="Volume" required>
+                    <label>centilitres</label>
+                    <br>
+                    <label>Prix</label>
+                    <input name="price[]" type="number" step="0.05" placeholder="Prix" required>
+                    <label>CHF</label>
+                </fieldset>
+                <br>
+                <input type="button" onclick="addFields('beer')" value="Ajouter une bière">
+            </td>
+            <td>
+                <h3>Heures d'ouvertures :</h3>
+                <fieldset id="schedule">
+                    <legend>Horaire</legend>
+                    <label>Jour</label>
+                    <select name="day[]">
+                        <option value=1>Lundi</option>
+                        <option value=2>Mardi</option>
+                        <option value=3>Mercredi</option>
+                        <option value=4>Jeudi</option>
+                        <option value=5>Vendredi</option>
+                        <option value=6>Samedi</option>
+                        <option value=7>Dimanche</option>
+                    </select>
+                    <br>
+                    <label>Ouverture</label>
+                    <input name="open[]" type="time" required>
+                    <br>
+                    <label>Fermeture</label>
+                    <input name="closed[]" type="time" required>
+                </fieldset>
+                <br>
+                <input type="button" onclick="addFields('schedule')" value="Ajouter un jour">
+            </td>
+    </table>
+    <p>
+        <button name="submit">Envoyer</button>
+    </p>
+</form>
+
+<script>
+    function addFields(id)
+    {
+        var fields = "<br><fieldset>" + document.getElementById(id).innerHTML + "</fieldset>";
+        document.getElementById(id).insertAdjacentHTML("afterend", fields);
+    }
+</script>

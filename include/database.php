@@ -5,5 +5,5 @@ try
 }
 catch(Exception $e)
 {
-    echo "Erreur : ".$e->getMessage();
+    die("<br><b>Error</b>: ".$e->getMessage());
 }

@@ -1,10 +1,15 @@
 <?php
 
 require_once "include/database.php";
+require_once "include/template.php";
 
-ob_start();
 require "fribar/".(filter_input(INPUT_GET, "url") ?: "home").".php";
-$content = ob_get_contents();
-ob_end_clean();
 
-require "template.php";
+if(!isset($title) || !isset($tpl))
+    die("<br><b>Error</b>: title and/or template not defined.");
+
+$main_tpl = new Template("main");
+$main_tpl->set("title", $title);
+$main_tpl->set("content", $tpl->html());
+
+echo $main_tpl->html();
