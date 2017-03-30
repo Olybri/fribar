@@ -9,7 +9,7 @@ $rev_num = str_pad(exec("git rev-list HEAD | wc -l"), 4, "0", STR_PAD_LEFT);
 $hash_short = exec("git log --pretty=%h -n1 HEAD");
 $hash_long = exec("git log --pretty=%H -n1 HEAD");
 
-$rev_date = exec("git log --pretty=%ci -n1 HEAD");
+$rev_date = exec("git log --pretty=%cD -n1 HEAD");
 
 $last_rev = "<a target=_blank href='";
 
