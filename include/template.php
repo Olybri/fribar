@@ -23,23 +23,29 @@ class Template
     public function html()
     {
         if(empty($this->name))
-            die("<br><b>Error</b>: Template name not defined.");
+            throw new Exception("Template name not defined.");
         
         $filename = "template/$this->name.html";
         if(!file_exists($filename))
-            die("<br><b>Error</b>: Template file not found <i>$filename</i>.");
+            throw new Exception("Template file not found <i>$filename</i>.");
         
         $html = file_get_contents($filename);
         
         foreach($this->values as $key => $value)
-            $html = str_replace("{".$key."}", $value, $html);
+        {
+            $html = str_replace("{".$key."}", $value, $html, $count);
+            if($count == 0)
+                throw new Exception("<i>$key</i> does not match any tag in template file <i>$filename</i>.");
+        }
         
         if(preg_match_all("<{(.+)}>", $html, $matches) != 0)
         {
-            echo "<br><b>Error</b>: Value(s) not defined in template file <i>$filename</i>:<ul>";
+            $error = "Tag(s) not set in template file <i>$filename</i>:<ul>";
             foreach(array_unique($matches[1]) as $match)
-                echo "<li>$match<br></li>";
-            die("</ul>");
+                $error .= "<li>$match</li>";
+            $error .= "</ul>";
+    
+            throw new Exception($error);
         }
         
         return $html;
