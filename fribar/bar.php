@@ -75,11 +75,20 @@ else if(isset($_POST["form"]))
 // Si on veut soumettre un bar
 else if(isset($_POST["submit"]))
 {
-    // TODO: mettre la bdd à jour
-    
     $title = "Bars";
-    
     $tpl = new Template("data_sent");
+    
+    $db->query("INSERT INTO bar (name) VALUES ('".$_POST["name"]."')");
+    $bar_id = $db->query("SELECT LAST_INSERT_ID()")->fetch()[0];
+    
+    foreach($_POST["beer"] as $key => $beer_id)
+    {
+        $volume = $_POST["volume"][$key];
+        $price = $_POST["price"][$key];
+        $db->query("INSERT INTO service (bar_id, product_id, volume, price)"
+            ."VALUES ($bar_id, $beer_id, $volume, $price)");
+    }
+    
     $tpl->set("text", "Nouveau bar envoyé");
     $tpl->set("back", "/bar");
 }

@@ -1,6 +1,6 @@
 <?php
 
-$git_not_found = empty(exec("git"));
+$git_not_found = empty(exec("git | wc"));
 
 $repo_url = exec("git remote get-url origin");
 
