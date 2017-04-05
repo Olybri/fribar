@@ -14,7 +14,7 @@ if(!isset($_GET["id"]) && empty($_POST))
         $url = $_SERVER["REQUEST_URI"]."?id=".$bar["id"];
         
         // Nombre de bières
-        $count = $db->query("SELECT COUNT(DISTINCT product_id)FROM service WHERE bar_id = ".$bar["id"])->fetch()[0];
+        $count = $db->query("SELECT COUNT(DISTINCT product_id)FROM service WHERE bar_id = ".$bar["id"])->fetchColumn();
         
         // Meilleur prix (pour un litre)
         $best = 0;
@@ -38,21 +38,20 @@ if(!isset($_GET["id"]) && empty($_POST))
 // Si on veut consulter un bar
 else if(isset($_GET["id"]))
 {
-    $res = $db->query("SELECT name FROM bar WHERE id = ".$_GET["id"]);
-    if($res->rowCount() == 0)
+    $title = $db->query("SELECT name FROM bar WHERE id = ".$_GET["id"])->fetchColumn();
+    if(!$title)
         die("Bar inexistant.");
     
-    $title = $res->fetch()["name"];
     $tpl = new Template("bar");
     
     $beer_table = "";
-    foreach($db->query("SELECT * FROM service WHERE bar_id = ".$_GET["id"]) as $row)
+    foreach($db->query("SELECT * FROM service WHERE bar_id = ".$_GET["id"]) as $service)
     {
-        $product = $db->query("SELECT * FROM product WHERE id = ".$row["product_id"])->fetch();
+        $product = $db->query("SELECT * FROM product WHERE id = ".$service["product_id"])->fetch();
         $beer_table .= "<tr>"
             ."<td><a href='beer?id=".$product["id"]."'>".$product["name"]."</td>"
-            ."<td>".($row["volume"] / 100)." dl</td>"
-            ."<td>CHF ".($row["price"] / 100)."</td>"
+            ."<td>".($service["volume"] / 100)." dl</td>"
+            ."<td>CHF ".($service["price"] / 100)."</td>"
             ."</tr>\n";
     }
     
@@ -79,12 +78,12 @@ else if(isset($_POST["submit"]))
     $tpl = new Template("data_sent");
     
     $db->query("INSERT INTO bar (name) VALUES ('".$_POST["name"]."')");
-    $bar_id = $db->query("SELECT LAST_INSERT_ID()")->fetch()[0];
+    $bar_id = $db->query("SELECT LAST_INSERT_ID()")->fetchColumn();
     
     foreach($_POST["beer"] as $key => $beer_id)
     {
         $volume = $_POST["volume"][$key];
-        $price = $_POST["price"][$key];
+        $price = $_POST["price"][$key] * 100;
         $db->query("INSERT INTO service (bar_id, product_id, volume, price)"
             ."VALUES ($bar_id, $beer_id, $volume, $price)");
     }

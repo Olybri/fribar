@@ -1,8 +1,8 @@
 <form id="form" action="/bar" method="post">
     <fieldset>
         <legend>Informations</legend>
-        <label>Nom</label>
-        <input name="name" type="text" placeholder="Nom" required>
+        <label for="name">Nom</label>
+        <input name="name" type="text" placeholder="Nom" id="name" required>
     </fieldset>
     <table>
         <tr>
@@ -10,18 +10,18 @@
                 <h3>Bières servies :</h3>
                 <fieldset id="beer">
                     <legend>Bière</legend>
-                    <label>Nom</label>
-                    <select name="beer[]">
+                    <label for="beer_list">Nom</label>
+                    <select name="beer[]" id="beer_list">
                         {beer_list}
                     </select>
                     <br>
-                    <label>Volume</label>
-                    <input name="volume[]" type="number" placeholder="Volume" required>
-                    <label>centilitres</label>
+                    <label for="volume">Volume</label>
+                    <input name="volume[]" type="number" placeholder="Volume" id="volume" required>
+                    <label for="volume">centilitres</label>
                     <br>
-                    <label>Prix</label>
-                    <input name="price[]" type="number" step="0.05" placeholder="Prix" required>
-                    <label>CHF</label>
+                    <label for="price">Prix</label>
+                    <input name="price[]" type="number" step="0.05" placeholder="Prix" id="price" required>
+                    <label for="price">CHF</label>
                 </fieldset>
                 <br>
                 <input type="button" onclick="addFields('beer')" value="Ajouter une bière">
@@ -30,8 +30,8 @@
                 <h3>Heures d'ouvertures :</h3>
                 <fieldset id="schedule">
                     <legend>Horaire</legend>
-                    <label>Jour</label>
-                    <select name="day[]">
+                    <label for="day">Jour</label>
+                    <select name="day[]" id="day">
                         <option value=1>Lundi</option>
                         <option value=2>Mardi</option>
                         <option value=3>Mercredi</option>
@@ -41,11 +41,11 @@
                         <option value=7>Dimanche</option>
                     </select>
                     <br>
-                    <label>Ouverture</label>
-                    <input name="open[]" type="time" required>
+                    <label for="open">Ouverture</label>
+                    <input name="open[]" type="time" id="open" required>
                     <br>
-                    <label>Fermeture</label>
-                    <input name="closed[]" type="time" required>
+                    <label for="closed">Fermeture</label>
+                    <input name="closed[]" type="time" id="closed" required>
                 </fieldset>
                 <br>
                 <input type="button" onclick="addFields('schedule')" value="Ajouter un jour">
