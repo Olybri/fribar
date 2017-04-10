@@ -2,11 +2,13 @@
 
 try
 {
+    require_once "vendor/autoload.php";
+    
     require_once "include/template.php";
     require_once "include/revision.php";
+    require_once "include/database.php";
     
-    $db = new PDO("mysql:host=localhost;dbname=fribar;charset=utf8", "root");
-    $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    $db = new Database();
     
     $request_file = "fribar/".(empty($_GET["url"]) ? "home" : $_GET["url"]).".php";
     

@@ -6,27 +6,32 @@ if(!isset($_GET["id"]) && empty($_POST))
     $title = "Bières";
     $tpl = new Template("beer_list");
     
-    $beer_table = "";
-    foreach($db->query("SELECT * FROM product") as $beer)
+    $product_table = "";
+    foreach($db->products() as $product)
     {
-        $beer_table .= "<tr>"
-            ."<td><a href='".$_SERVER["REQUEST_URI"]."?id=".$beer["id"]."'>".$beer["name"]."</td>"
+        $name = $product["name"];
+        $url = "/beer?id=".$product["id"];
+        
+        $product_table .= "<tr>"
+            ."<td><a href='$url'>$name</td>"
             ."</tr>\n";
     }
     
-    $tpl->set("beer_table", $beer_table);
+    $tpl->set("beer_table", $product_table);
 }
 
 // Si on veut consulter une bière
 else if(isset($_GET["id"]))
 {
-    $title = $db->query("SELECT name FROM product WHERE id = ".$_GET["id"])->fetchColumn();
+    $product = $db->product($_GET["id"]);
+    
+    $title = $product["name"];
     if(!$title)
         die("Produit inexistant.");
     
-    $service_list = $db->query("SELECT * FROM service WHERE product_id = ".$_GET["id"]);
+    $services = $db->product_services($_GET["id"]);
     
-    if($service_list->rowCount() == 0)
+    if(empty($services))
         $tpl = new Template("not_served");
     
     else
@@ -34,13 +39,20 @@ else if(isset($_GET["id"]))
         $tpl = new Template("beer");
         
         $bar_table = "";
-        foreach($service_list as $service)
+        foreach($services as $service)
         {
-            $bar = $db->query("SELECT * FROM bar WHERE id = ".$service["bar_id"])->fetch();
+            $bar = $db->bar($service["bar_id"]);
+            
+            $name = $bar["name"];
+            $url = "bar?id=".$bar["id"];
+            
+            $volume = $service["volume"] / 100;
+            $price = $service["price"] / 100;
+            
             $bar_table .= "<tr>"
-                ."<td><a href='bar?id=".$bar["id"]."'>".$bar["name"]."</td>"
-                ."<td>".($service["volume"] / 100)." dl</td>"
-                ."<td>CHF ".($service["price"] / 100)."</td>"
+                ."<td><a href='$url'>$name</td>"
+                ."<td>$volume dl</td>"
+                ."<td>CHF $price</td>"
                 ."</tr>\n";
         }
         
@@ -61,7 +73,7 @@ else if(isset($_POST["submit"]))
     $title = "Bières";
     $tpl = new Template("data_sent");
     
-    $db->query("INSERT INTO product (name) VALUES ('".$_POST["name"]."')");
+    $db->add_product($_POST["name"]);
     
     $tpl->set("text", "Nouvelle bière envoyée");
     $tpl->set("back", "/beer");

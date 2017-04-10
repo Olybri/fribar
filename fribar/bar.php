@@ -7,28 +7,20 @@ if(!isset($_GET["id"]) && empty($_POST))
     $tpl = new Template("bar_list");
     
     $bar_table = "";
-    foreach($db->query("SELECT * FROM bar") as $bar)
+    foreach($db->bars() as $bar)
     {
-        // Nom du bar
         $name = $bar["name"];
-        $url = $_SERVER["REQUEST_URI"]."?id=".$bar["id"];
+        $url = "/bar?id=".$bar["id"];
         
-        // Nombre de bières
-        $count = $db->query("SELECT COUNT(DISTINCT product_id)FROM service WHERE bar_id = ".$bar["id"])->fetchColumn();
+        $product_count = $db->product_count($bar["id"]);
         
-        // Meilleur prix (pour un litre)
-        $best = 0;
-        foreach($db->query("SELECT * FROM service WHERE bar_id = ".$bar["id"]) as $barProduct)
-        {
-            $price = $barProduct["price"] / $barProduct["volume"] * 10;
-            if($best == 0 || $price < $best)
-                $best = $price;
-        }
+        $best_price = $db->best_price($bar["id"]);
+        $best_price = ($best_price == 0 ? "—" : "CHF $best_price / litre");
         
         $bar_table .= "<tr>"
             ."<td><a href='$url'>$name</td>"
-            ."<td>$count</td>"
-            ."<td>CHF $best / litre</td>"
+            ."<td>$product_count</td>"
+            ."<td>$best_price</td>"
             ."</tr>\n";
     }
     
@@ -38,24 +30,33 @@ if(!isset($_GET["id"]) && empty($_POST))
 // Si on veut consulter un bar
 else if(isset($_GET["id"]))
 {
-    $title = $db->query("SELECT name FROM bar WHERE id = ".$_GET["id"])->fetchColumn();
+    $bar = $db->bar($_GET["id"]);
+    
+    $title = $bar["name"];
     if(!$title)
         die("Bar inexistant.");
     
     $tpl = new Template("bar");
     
-    $beer_table = "";
-    foreach($db->query("SELECT * FROM service WHERE bar_id = ".$_GET["id"]) as $service)
+    $product_table = "";
+    foreach($db->bar_services($bar["id"]) as $service)
     {
-        $product = $db->query("SELECT * FROM product WHERE id = ".$service["product_id"])->fetch();
-        $beer_table .= "<tr>"
-            ."<td><a href='beer?id=".$product["id"]."'>".$product["name"]."</td>"
-            ."<td>".($service["volume"] / 100)." dl</td>"
-            ."<td>CHF ".($service["price"] / 100)."</td>"
+        $product = $db->product($service["product_id"]);
+        
+        $name = $product["name"];
+        $url = "beer?id=".$product["id"];
+        
+        $volume = $service["volume"] / 100;
+        $price = $service["price"] / 100;
+        
+        $product_table .= "<tr>"
+            ."<td><a href='$url'>$name</td>"
+            ."<td>$volume dl</td>"
+            ."<td>CHF $price</td>"
             ."</tr>\n";
     }
     
-    $tpl->set("beer_table", $beer_table);
+    $tpl->set("beer_table", $product_table);
 }
 
 // Si on veut ajouter un bar
@@ -64,11 +65,11 @@ else if(isset($_POST["form"]))
     $title = "Ajouter un bar";
     $tpl = new Template("bar_form");
     
-    $beer_list = "";
-    foreach($db->query("SELECT * FROM product") as $beer)
-        $beer_list .= "<option value='".$beer["id"]."'>".$beer["name"]."</option>\n";
+    $product_list = "";
+    foreach($db->products() as $product)
+        $product_list .= "<option value='".$product["id"]."'>".$product["name"]."</option>\n";
     
-    $tpl->set("beer_list", $beer_list);
+    $tpl->set("beer_list", $product_list);
 }
 
 // Si on veut soumettre un bar
@@ -77,16 +78,8 @@ else if(isset($_POST["submit"]))
     $title = "Bars";
     $tpl = new Template("data_sent");
     
-    $db->query("INSERT INTO bar (name) VALUES ('".$_POST["name"]."')");
-    $bar_id = $db->query("SELECT LAST_INSERT_ID()")->fetchColumn();
-    
-    foreach($_POST["beer"] as $key => $beer_id)
-    {
-        $volume = $_POST["volume"][$key];
-        $price = $_POST["price"][$key] * 100;
-        $db->query("INSERT INTO service (bar_id, product_id, volume, price)"
-            ."VALUES ($bar_id, $beer_id, $volume, $price)");
-    }
+    $bar_id = $db->add_bar($_POST["name"]);
+    $db->add_services($bar_id, $_POST["beer"], $_POST["volume"], $_POST["price"]);
     
     $tpl->set("text", "Nouveau bar envoyé");
     $tpl->set("back", "/bar");
