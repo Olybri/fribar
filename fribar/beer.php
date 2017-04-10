@@ -13,7 +13,7 @@ if(!isset($_GET["id"]) && empty($_POST))
         $url = "/beer?id=".$product["id"];
         
         $product_table .= "<tr>"
-            ."<td><a href='$url'>$name</td>"
+            ."<td><a href='$url'>$name</a></td>"
             ."</tr>\n";
     }
     
@@ -50,7 +50,7 @@ else if(isset($_GET["id"]))
             $price = $service["price"] / 100;
             
             $bar_table .= "<tr>"
-                ."<td><a href='$url'>$name</td>"
+                ."<td><a href='$url'>$name</a></td>"
                 ."<td>$volume dl</td>"
                 ."<td>CHF $price</td>"
                 ."</tr>\n";

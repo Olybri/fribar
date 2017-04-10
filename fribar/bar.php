@@ -18,7 +18,7 @@ if(!isset($_GET["id"]) && empty($_POST))
         $best_price = ($best_price == 0 ? "—" : "CHF $best_price / litre");
         
         $bar_table .= "<tr>"
-            ."<td><a href='$url'>$name</td>"
+            ."<td><a href='$url'>$name</a></td>"
             ."<td>$product_count</td>"
             ."<td>$best_price</td>"
             ."</tr>\n";
@@ -50,7 +50,7 @@ else if(isset($_GET["id"]))
         $price = $service["price"] / 100;
         
         $product_table .= "<tr>"
-            ."<td><a href='$url'>$name</td>"
+            ."<td><a href='$url'>$name</a></td>"
             ."<td>$volume dl</td>"
             ."<td>CHF $price</td>"
             ."</tr>\n";
